@@ -5,18 +5,27 @@ from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 
 
 class Translator:
-    def __init__(self, model_name="Helsinki-NLP/opus-mt-en-hi", device=None):
+    def __init__(self, model_name="facebook/nllb-200-distilled-600M", device=None):
         self.device = device if device else ("cuda" if torch.cuda.is_available() else "cpu")
 
-        print(f"[INFO] Loading translation model on {self.device}...")
+        print(f"[INFO] Loading translation model {model_name} on {self.device}...")
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModelForSeq2SeqLM.from_pretrained(model_name).to(self.device)
 
     def translate(self, text):
+        # Set source language if using NLLB
+        if "nllb" in self.model.config._name_or_path:
+            self.tokenizer.src_lang = "eng_Latn"
+        
         inputs = self.tokenizer(text, return_tensors="pt", truncation=True).to(self.device)
 
         with torch.no_grad():
-            outputs = self.model.generate(**inputs, max_length=512)
+            if "nllb" in self.model.config._name_or_path:
+                # Target language: Hindi (hin_Deva)
+                forced_bos_token_id = self.tokenizer.convert_tokens_to_ids("hin_Deva")
+                outputs = self.model.generate(**inputs, forced_bos_token_id=forced_bos_token_id, max_length=512)
+            else:
+                outputs = self.model.generate(**inputs, max_length=512)
 
         translated_text = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
 
