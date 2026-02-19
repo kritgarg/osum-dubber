@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.DS_Store
+.env
+venv/
+.python-version
+check_*.py
+data/intermediate/
+data/output/

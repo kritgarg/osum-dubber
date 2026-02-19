@@ -1,0 +1,5 @@
+faster-whisper
+transformers
+torch
+sentencepiece
+sacremoses
