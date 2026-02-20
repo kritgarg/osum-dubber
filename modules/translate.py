@@ -8,7 +8,7 @@ class Translator:
     def __init__(self, model_name="facebook/nllb-200-distilled-600M", device=None):
         self.device = device if device else ("cuda" if torch.cuda.is_available() else "cpu")
 
-        print(f"[INFO] Loading translation model {model_name} on {self.device}...")
+
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModelForSeq2SeqLM.from_pretrained(model_name).to(self.device)
 
@@ -42,7 +42,6 @@ def translate_file(input_json_path, output_json_path, translator):
 
     english_text = data["full_text"]
 
-    print("[INFO] Translating to Hindi...")
     hindi_text = translator.translate(english_text)
 
     output_data = {
@@ -55,6 +54,5 @@ def translate_file(input_json_path, output_json_path, translator):
     with open(output_json_path, "w", encoding="utf-8") as f:
         json.dump(output_data, f, indent=4, ensure_ascii=False)
 
-    print(f"[SUCCESS] Translation saved to {output_json_path}")
 
     return hindi_text

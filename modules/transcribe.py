@@ -17,7 +17,6 @@ def transcribe_audio(audio_path, output_path, model):
     Transcribes audio and saves transcript as JSON.
     """
 
-    print("[INFO] Transcribing audio...")
 
     segments, info = model.transcribe(audio_path)
 
@@ -46,6 +45,5 @@ def transcribe_audio(audio_path, output_path, model):
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(output_data, f, indent=4, ensure_ascii=False)
 
-    print(f"[SUCCESS] Transcript saved to {output_path}")
 
     return transcript, segment_data

@@ -39,9 +39,7 @@ def extract_clip(input_path, output_path, start_time="00:00:15", duration=15):
         output_path
     ]
 
-    print(f"[INFO] Extracting clip: {start_time} → {duration}s")
     run_command(cmd)
-    print(f"[SUCCESS] Clip saved at: {output_path}")
 
 
 def extract_audio(video_path, audio_path):
@@ -61,9 +59,7 @@ def extract_audio(video_path, audio_path):
         audio_path
     ]
 
-    print("[INFO] Extracting audio (16kHz mono WAV)...")
     run_command(cmd)
-    print(f"[SUCCESS] Audio saved at: {audio_path}")
 
 
 def get_duration(file_path):
