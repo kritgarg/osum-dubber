@@ -3,3 +3,6 @@ transformers
 torch
 sentencepiece
 sacremoses
+librosa
+soundfile
+bark
