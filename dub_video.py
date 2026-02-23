@@ -6,6 +6,7 @@ from modules.extract import extract_clip, extract_audio
 from modules.transcribe import load_model, transcribe_audio
 from modules.translate import Translator, translate_file
 from modules.voice_clone import VoiceCloner
+from modules.audio_align import match_duration
 
 def main():
     parser = argparse.ArgumentParser(description="Extract, transcribe, and translate a video clip.")
@@ -56,8 +57,15 @@ def main():
             output_wav_path=hindi_wav_path
         )
         
+        # Step 5: Duration alignment
+        match_duration(
+            reference_audio_path=audio_path,
+            generated_audio_path="data/intermediate/hindi_raw.wav",
+            output_path="data/intermediate/hindi_final.wav"
+        )
+        
         print(f"[SUCCESS] Pipeline completed! Translation saved to: {hindi_path}")
-        print(f"[SUCCESS] Hindi audio saved to: {hindi_wav_path}")
+        print(f"[SUCCESS] Hindi duration-aligned audio saved to: data/intermediate/hindi_final.wav")
     except RuntimeError as re:
         print(f"[ERROR] System command failed: {re}")
         sys.exit(1)
