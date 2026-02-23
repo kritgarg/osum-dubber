@@ -1,3 +1,9 @@
+import torch
+import numpy
+
+# Allow numpy scalar during torch.load (PyTorch 2.6 fix)
+torch.serialization.add_safe_globals([numpy.core.multiarray.scalar])
+
 import json
 from pathlib import Path
 from bark import generate_audio, preload_models
@@ -15,10 +21,10 @@ class VoiceCloner:
 
         hindi_text = data["hindi_text"]
 
-        print("[INFO] Generating Hindi speech using Bark...")
+        print("[INFO] Generating Hindi speech...")
         audio_array = generate_audio(hindi_text)
 
         Path(output_wav_path).parent.mkdir(parents=True, exist_ok=True)
         sf.write(output_wav_path, audio_array, 24000)
 
-        print(f"[SUCCESS] Hindi audio saved at {output_wav_path}")
+        print(f"[SUCCESS] Saved at {output_wav_path}")
