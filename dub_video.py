@@ -5,6 +5,7 @@ from pathlib import Path
 from modules.extract import extract_clip, extract_audio
 from modules.transcribe import load_model, transcribe_audio
 from modules.translate import Translator, translate_file
+from modules.voice_clone import VoiceCloner
 
 def main():
     parser = argparse.ArgumentParser(description="Extract, transcribe, and translate a video clip.")
@@ -46,7 +47,17 @@ def main():
         translator = Translator(device=args.device)
         translate_file(transcript_path, hindi_path, translator)
         
+        # Step 4: Generate Hindi Audio
+        print("[*] Generating Hindi audio...")
+        hindi_wav_path = str(output_dir / "hindi_raw.wav")
+        cloner = VoiceCloner()
+        cloner.generate(
+            hindi_json_path=hindi_path,
+            output_wav_path=hindi_wav_path
+        )
+        
         print(f"[SUCCESS] Pipeline completed! Translation saved to: {hindi_path}")
+        print(f"[SUCCESS] Hindi audio saved to: {hindi_wav_path}")
     except RuntimeError as re:
         print(f"[ERROR] System command failed: {re}")
         sys.exit(1)
