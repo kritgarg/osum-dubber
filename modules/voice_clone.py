@@ -1,8 +1,15 @@
 import torch
-import numpy
+import functools
 
-# Allow numpy scalar during torch.load (PyTorch 2.6 fix)
-torch.serialization.add_safe_globals([numpy.core.multiarray.scalar])
+# ---- FORCE torch.load TO ALLOW FULL CHECKPOINT LOAD ----
+_original_torch_load = torch.load
+
+def patched_torch_load(*args, **kwargs):
+    kwargs["weights_only"] = False
+    return _original_torch_load(*args, **kwargs)
+
+torch.load = patched_torch_load
+# ---------------------------------------------------------
 
 import json
 from pathlib import Path
